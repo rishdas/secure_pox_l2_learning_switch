@@ -3,7 +3,7 @@
 from mininet.net import Mininet
 from mininet.topo import Topo
 from mininet.link import TCLink
-from mininet.node import OVSSwitch,RemoteController
+from mininet.node import OVSSwitch,RemoteController,DefaultController
 from mininet.cli import CLI
 from mininet.util import quietRun
 from mininet.log import setLogLevel, info
@@ -38,9 +38,9 @@ def startARPSpoofing (host):
 def stopARPSpoofing(host):
     host.cmd("kill %arpspoof")
 
-def arpspoof_launch (doSpoof=False):
+def arpspoof_launch (doSpoof=False,controller=None):
     topo = ARPSpoofTopo ()
-    net = Mininet (topo=topo, link=TCLink, switch=OVSSwitch, controller=RemoteController)
+    net = Mininet (topo=topo, link=TCLink, switch=OVSSwitch, controller=controller)
     spoofer = net.get('spoofer')
     net.start()
     if doSpoof:
@@ -51,7 +51,10 @@ def arpspoof_launch (doSpoof=False):
 
 if __name__ == "__main__":
     doSpoof = False
+    controller = DefaultController
     setLogLevel("info")
     if "spoof" in argv:
         doSpoof=True
-    arpspoof_launch (doSpoof)
+    if "remote" in argv:
+        controller = RemoteController
+    arpspoof_launch (doSpoof,controller)

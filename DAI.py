@@ -49,9 +49,19 @@ class DynamicARPInspection (object):
                     self.spoofers[senderMAC] = ARPSpoofer()
                     self.spoofers[senderMAC].inport = inport
             
-                if self.spoofers[senderMAC].count > ARPSpoofer.threshold:
+                if self.spoofers[senderMAC].count >= ARPSpoofer.threshold:
                     log.info("ARP Spoofing threshold achieved. Blocking port %d", self.spoofers[senderMAC].inport)
-        
+                    self.blockSpoofer (senderMAC, event)
+
+    def blockSpoofer (self, mac, event):
+        spoofer = self.spoofers[mac]
+        match = of.ofp_match(in_port = spoofer.inport)
+        msg = of.ofp_flow_mod (match=match)
+        msg.priprity = 100
+        msg.idle_timeout = 10
+        msg.hard_timeout = 20
+        event.connection.send (msg)
+        spoofer.count = 0
 
 def launch ():
     core.registerNew (DynamicARPInspection)
