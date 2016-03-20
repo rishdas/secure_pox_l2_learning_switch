@@ -18,7 +18,7 @@ class ARPSpoofTopo (Topo):
     def __init__( self, *args, **kwargs ):
         Topo.__init__( self, *args, **kwargs )
         switch = self.addSwitch ('s1')
-        for i in range(1,3):
+        for i in range(1,4):
             name = "h%d" % i
             mac = "00:00:00:00:00:0%d" % i
             ip = "10.0.0.%d/24" % i
@@ -40,7 +40,7 @@ def stopARPSpoofing(host):
 
 def arpspoof_launch (doSpoof=False):
     topo = ARPSpoofTopo ()
-    net = Mininet (topo=topo, link=TCLink, switch=OVSSwitch) #, controller=RemoteController)
+    net = Mininet (topo=topo, link=TCLink, switch=OVSSwitch, controller=RemoteController)
     spoofer = net.get('spoofer')
     net.start()
     if doSpoof:
