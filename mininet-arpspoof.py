@@ -5,14 +5,9 @@ from mininet.topo import Topo
 from mininet.link import TCLink
 from mininet.node import OVSSwitch,RemoteController,DefaultController
 from mininet.cli import CLI
-from mininet.util import quietRun
 from mininet.log import setLogLevel, info
-from mininet.term import makeTerms
 
 from sys import exit, stdin, argv
-from re import findall
-from time import sleep
-import os
 
 class ARPSpoofTopo (Topo):
     def __init__( self, *args, **kwargs ):
