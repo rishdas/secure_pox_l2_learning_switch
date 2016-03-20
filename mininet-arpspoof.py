@@ -18,11 +18,10 @@ class ARPSpoofTopo (Topo):
     def __init__( self, *args, **kwargs ):
         Topo.__init__( self, *args, **kwargs )
         switch = self.addSwitch ('s1')
-        for i in range(3):
-            id = i+1
-            name = "h%d" % id
-            mac = "00:00:00:00:00:0%d" % id
-            ip = "10.0.0.%d/24" % id
+        for i in range(1,3):
+            name = "h%d" % i
+            mac = "00:00:00:00:00:0%d" % i
+            ip = "10.0.0.%d/24" % i
             host = self.addHost (name,mac=mac,ip=ip)
             self.addLink (host,switch,bw=10,delay="50ms")
         spoofer = self.addHost ("spoofer",mac="00:00:de:ad:be:ef",ip="10.0.0.5/24")
