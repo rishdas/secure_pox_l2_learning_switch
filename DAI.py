@@ -1,13 +1,12 @@
 from pox.core import core
 import pox.openflow.libopenflow_01 as of
 import pox.lib.packet as pkt
-from pox.lib.addresses import *
 from pox.lib.util import dpid_to_str
 
 log = core.getLogger ()
 
 class ARPSpoofer (object):
-    threshold = 3
+    threshold = 1
 
     def __init__ (self):
         self.inport = 0
@@ -58,8 +57,8 @@ class DynamicARPInspection (object):
         match = of.ofp_match(in_port = spoofer.inport)
         msg = of.ofp_flow_mod (match=match)
         msg.priprity = 100
-        msg.idle_timeout = 10
-        msg.hard_timeout = 20
+        msg.idle_timeout = of.OFP_FLOW_PERMANENT
+        msg.hard_timeout = of.OFP_FLOW_PERMANENT
         event.connection.send (msg)
         spoofer.count = 0
 
