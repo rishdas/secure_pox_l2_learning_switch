@@ -9,7 +9,7 @@ from mininet.log import setLogLevel, info
 
 from sys import exit, stdin, argv
 
-class ARPSpoofTopo (Topo):
+class IPSpoofTopo (Topo):
     def __init__( self, *args, **kwargs ):
         Topo.__init__( self, *args, **kwargs )
         switch = self.addSwitch ('s1')
@@ -22,24 +22,19 @@ class ARPSpoofTopo (Topo):
         spoofer = self.addHost ("spoofer",mac="00:00:de:ad:be:ef",ip="10.0.0.5/24")
         self.addLink(spoofer, switch)
 
-def startARPSpoofing (host):
+def startIPSpoofing (host):
     for i in range(1, 10):
         for j in range(1, 4):
-            host.cmd ("nping -S 10.0.0.%d 10.0.0.%d" % (6 + i, j))
+            host.cmd ("nping -S 10.0.0.%d 10.0.0.%d" % (5 + i, j))
 
-
-def stopARPSpoofing(host):
-    host.cmd("kill %arpspoof")
-
-def arpspoof_launch (doSpoof=False,controller=None):
-    topo = ARPSpoofTopo ()
+def ipspoof_launch (doSpoof=False,controller=None):
+    topo = IPSpoofTopo ()
     net = Mininet (topo=topo, link=TCLink, switch=OVSSwitch, controller=controller)
     spoofer = net.get('spoofer')
     net.start()
     if doSpoof:
-        startARPSpoofing (spoofer)
+        startIPSpoofing (spoofer)
     CLI(net)
-    stopARPSpoofing(spoofer)
     net.stop()
 
 if __name__ == "__main__":
@@ -50,4 +45,4 @@ if __name__ == "__main__":
         doSpoof=True
     if "remote" in argv:
         controller = RemoteController
-    arpspoof_launch (doSpoof,controller)
+    ipspoof_launch (doSpoof,controller)
