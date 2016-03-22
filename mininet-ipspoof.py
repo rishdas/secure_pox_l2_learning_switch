@@ -20,12 +20,13 @@ class ARPSpoofTopo (Topo):
             host = self.addHost (name,mac=mac,ip=ip)
             self.addLink (host,switch,bw=10,delay="50ms")
         spoofer = self.addHost ("spoofer",mac="00:00:de:ad:be:ef",ip="10.0.0.5/24")
-        for i in range(1, 10):
-            self.addLink (spoofer,switch)
+        self.addLink(spoofer, switch)
 
 def startARPSpoofing (host):
     for i in range(1, 10):
-        host.cmd ("ifconfig spoofer-eth%d 10.0.0.%d netmask 255.255.255.0" % (i, 5+i))
+        for j in range(1, 4):
+            host.cmd ("nping -S 10.0.0.%d 10.0.0.%d" % (6 + i, j))
+
 
 def stopARPSpoofing(host):
     host.cmd("kill %arpspoof")
