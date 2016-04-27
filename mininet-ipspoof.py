@@ -18,7 +18,7 @@ class IPSpoofTopo (Topo):
             mac = "00:00:00:00:00:0%d" % i
             ip = "10.0.0.%d/24" % i
             host = self.addHost (name,mac=mac,ip=ip)
-            self.addLink (host,switch,bw=10,delay="50ms")
+            self.addLink (host,switch,bw=10,delay="1ms")
         spoofer = self.addHost ("spoofer",mac="00:00:de:ad:be:ef",ip="10.0.0.5/24")
         self.addLink(spoofer, switch)
 
