@@ -73,6 +73,9 @@ class LearningSwitch (object):
      flow goes out the appopriate port
      6a) Send the packet out appropriate port
   """
+  is_dhcp_server_found = False
+  dhcp_server_port = 3
+
   def __init__ (self, connection, transparent):
     # Switch we'll be adding L2 learning switch capabilities to
     self.connection = connection
@@ -98,7 +101,6 @@ class LearningSwitch (object):
 
     packet = event.parsed
     packetdhcp = packet.find('udp')
-
 
     def flood (message = None):
       """ Floods the packet """
@@ -144,9 +146,15 @@ class LearningSwitch (object):
         msg.in_port = event.port
         self.connection.send(msg)
 
-    if packetdhcp is not None:
+    if packetdhcp is not None and self.is_dhcp_server_found == False:
       if packetdhcp.srcport == 67:
-        if event.port != 3:
+        self.dhcp_server_port = event.port
+        self.is_dhcp_server_found = True
+        log.info("Valid DHCP server")
+        
+    if packetdhcp is not None and self.is_dhcp_server_found == True:
+      if packetdhcp.srcport == 67:
+        if event.port != self.dhcp_server_port:
           log.info("Rogue DHCP server in town droping packets")
           drop()
           return
